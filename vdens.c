@@ -254,10 +254,12 @@ static void plug2tap(VDECONN **conn, int *tapfd, int nnets) {
 	}
 	while (ppoll(pfd, npfd, NULL, &chldmask) >= 0) {
 		for (i = 0; i < nnets; i++) {
-      if (pfd[i].revents & (POLLHUP | POLLNVAL)) {
-        if (vde_pollhup_handler(conn[i]) < 0) goto terminate;
-        continue;
-      }
+			if (pfd[i].revents & (POLLHUP | POLLNVAL)) {
+				if (vde_pollhup_handler(conn[i]) < 0) 
+					goto terminate;
+
+				continue;
+			}
 			if (pfd[i].revents & POLLIN) {
 				n = vde_recv(conn[i], buf, VDE_ETHBUFSIZE, 0);
 				if (n < 0) goto terminate;
